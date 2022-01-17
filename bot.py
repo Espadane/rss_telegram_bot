@@ -7,7 +7,7 @@ from rss_parser import *
 from db_worker import *
 
 
-bot_token = getenv("RSS_BOT_TOKEN")
+bot_token = getenv("TEST_TOKEN")
 if not bot_token:
     exit("Ошибка - нет токена для бота.")
 
@@ -76,12 +76,12 @@ async def last_feed(call: types.callback_query):
 async def add_feed(msg: types.Message):
     """Проверка сообщения пользователя, если сообщение является ссылкой на ленту, добавление ленты в отслеживаемые. Если лента уже отслеживается - сообщение пользователю. Небольшое дополнение для рутрекера с магнет ссылкой"""
     user_id = msg.from_user.id
-    if 'feed' in msg.text:
-        feed_url = msg.text
-        response = check_feed_url_in_db(feed_url)
-        if response == None:
-            records = get_records(msg.text)
-            if records != []:
+    feed_url = msg.text
+    response = check_feed_url_in_db(feed_url)
+    if response == None:
+        records = get_records(msg.text)
+        if records != []:
+            try:
                 feed_name = get_feed_name(feed_url)
                 title = records[0]['record_title']
                 link = records[0]['record_link']
@@ -90,11 +90,11 @@ async def add_feed(msg: types.Message):
                 await msg.answer(f'Последняя новость в канале:\n<a href="{link}">{title}</a>\n\n{magnet_link}\n', parse_mode='HTML')
                 for record in records:
                     write_feed_to_db(user_id, feed_name, feed_url, record)
-        else:
-            await msg.answer(f'Данная лента уже отслеживается')
-
+            except:
+                await msg.answer('Ссылка на канал не корректна')
     else:
-        await msg.answer('Ссылка на канал не корректна')
+        await msg.answer(f'Данная лента уже отслеживается')
+
 
 
 async def check_new_records(user_id):

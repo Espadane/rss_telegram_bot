@@ -9,8 +9,7 @@ def get_records(feed_url):
     feed = feedparser.parse(f'{feed_url}')
     news = feed['entries']
     records = []
-
-    for new in news:
+    for new in news[0:5]:
         record_id = new['id']
         record_title = new['title']
         record_link = new['link']
