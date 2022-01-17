@@ -76,7 +76,7 @@ async def last_feed(call: types.callback_query):
 async def add_feed(msg: types.Message):
     """Проверка сообщения пользователя, если сообщение является ссылкой на ленту, добавление ленты в отслеживаемые. Если лента уже отслеживается - сообщение пользователю. Небольшое дополнение для рутрекера с магнет ссылкой"""
     user_id = msg.from_user.id
-    if 'feed' in msg.text:
+    if 'feed' or 'atom' in msg.text:
         feed_url = msg.text
         response = check_feed_url_in_db(feed_url)
         if response == None:
