@@ -2,7 +2,7 @@ from os import getenv
 from sys import exit
 
 
-bot_token = getenv("TEST_TOKEN")
+bot_token = getenv("RSS_BOT_TOKEN")
 if not bot_token:
     exit("Ошибка - нет токена для бота.")
 
