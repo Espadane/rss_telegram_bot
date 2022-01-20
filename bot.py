@@ -140,7 +140,7 @@ async def check_new_records(user_id):
                             else:
                                 await bot.send_message(user_id, f'#{feed_name}\n\n<a href="{link}">{title}</a>\n', parse_mode='HTML')
 
-        await asyncio.sleep(40)
+        await asyncio.sleep(1800)
 
 
 def create_loops():
