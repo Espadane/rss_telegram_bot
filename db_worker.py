@@ -1,11 +1,11 @@
 import sqlite3
 
 
-
 conn = sqlite3.connect('db.db')
 cursor = conn.cursor()
 
 sources_names = ['rss', 'vk']
+
 
 def create_table_tracked_feeds():
     """Создание таблицы с отслеживаемыми лентами, если она еще не существует"""
@@ -19,11 +19,11 @@ def create_table_tracked_feeds():
 
 def write_record_to_db(user_id, record, source_name):
     """Добавление новой записи в базу данных"""
-    feed_name=record['feed_name']
-    feed_url=record['feed_url']
-    record_id=record['record_id']
-    record_title=record['record_title']
-    record_link=record['record_link']
+    feed_name = record['feed_name']
+    feed_url = record['feed_url']
+    record_id = record['record_id']
+    record_title = record['record_title']
+    record_link = record['record_link']
     try:
         cursor.execute(f'INSERT INTO {source_name}_sources (user_id, feed_name, feed_url, record_id, record_title, record_link) VALUES (?, ?, ?, ?, ?, ?)',
                        (user_id, feed_name, feed_url, record_id, record_title, record_link))
@@ -48,7 +48,7 @@ def delete_last_record(user_id, record_id):
     try:
         for source_name in sources_names:
             cursor.execute(
-            f'DELETE FROM {source_name}_sources WHERE user_id = ? and record_id = ?', (user_id, record_id))
+                f'DELETE FROM {source_name}_sources WHERE user_id = ? and record_id = ?', (user_id, record_id))
             conn.commit()
     except sqlite3.Error as error:
         print("Ошибка", error)
@@ -93,10 +93,11 @@ def delete_user_feed(user_id, feed_url_to_delete):
     try:
         for source_name in sources_names:
             cursor.execute(f'DELETE FROM {source_name}_sources WHERE user_id = ? and feed_url = ?',
-                        (user_id, feed_url_to_delete))
+                           (user_id, feed_url_to_delete))
             conn.commit()
     except sqlite3.Error as error:
         print("Ошибка", error)
+
 
 def check_feed_url_in_db(user_id, request_url):
     """Проверка отслеживается ли источник"""
@@ -107,7 +108,17 @@ def check_feed_url_in_db(user_id, request_url):
         if response != None:
             break
 
-
     return response
+
+
+def get_users_list():
+    users = []
+    for source_name in sources_names:
+        for row in cursor.execute(
+                f'SELECT user_id from {source_name}_sources'):
+            users.append(row[0])
+
+    return set(users)
+
 
 create_table_tracked_feeds()

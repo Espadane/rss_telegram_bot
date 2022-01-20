@@ -19,9 +19,6 @@ dp = Dispatcher(bot)
 async def start_command(msg: types.Message):
     """Обработчик команды '/start' и запуск цикла процесса проверки новых записей во всех лентах пользователя"""
     await msg.answer(f"Привет, {msg.from_user.first_name}!\nЯ новостной бот. Умею работать с RSS, VK. Просто пришли мне ссылку и я буду отслеживать для тебя новости.\nПожалуйста, если у тебя есть пожелания напиши: t.me/espadane", disable_web_page_preview=True)
-    user_id = msg.from_user.id
-    loop = asyncio.get_event_loop()
-    loop.create_task(check_new_records(user_id))
 
 
 @dp.message_handler(commands=['help'])
@@ -143,8 +140,17 @@ async def check_new_records(user_id):
                             else:
                                 await bot.send_message(user_id, f'#{feed_name}\n\n<a href="{link}">{title}</a>\n', parse_mode='HTML')
 
-        await asyncio.sleep(1800)
+        await asyncio.sleep(40)
+
+
+def create_loops():
+    users_list = get_users_list()
+    if users_list != []:
+        for user in users_list:
+            loop = asyncio.get_event_loop()
+            loop.create_task(check_new_records(user))
 
 
 if __name__ == '__main__':
+    create_loops()
     executor.start_polling(dp)
