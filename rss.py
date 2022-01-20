@@ -12,7 +12,10 @@ def get_records_from_rss(request_url):
         record_id = new['id']
         record_title = new['title']
         record_link = new['link']
-        feed_name = get_feed_name(request_url)
+        try:
+            feed_name = get_feed_name(request_url).replace(' ', '_')
+        except:
+            feed_name = ' '
         records.append({
                         'feed_name' : feed_name,
                         'feed_url' : request_url,
