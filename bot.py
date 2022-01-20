@@ -139,9 +139,9 @@ async def check_new_records(user_id):
                             link = new_record['record_link']
                             if 'rutracker' in link:
                                 magnet_link = get_magnet_link(link)
-                                await bot.send_message(user_id, f'#{feed_name.replace(" ", "_")}\n\n<a href="{link}">{title}</a>\nМагнет ссылка:\n{magnet_link}\n', parse_mode='HTML', disable_web_page_preview=True)
+                                await bot.send_message(user_id, f'#{feed_name}\n\n<a href="{link}">{title}</a>\nМагнет ссылка:\n{magnet_link}\n', parse_mode='HTML', disable_web_page_preview=True)
                             else:
-                                await bot.send_message(user_id, f'#{feed_name.replace(" ", "_")}\n\n<a href="{link}">{title}</a>\n', parse_mode='HTML')
+                                await bot.send_message(user_id, f'#{feed_name}\n\n<a href="{link}">{title}</a>\n', parse_mode='HTML')
 
         await asyncio.sleep(1800)
 
