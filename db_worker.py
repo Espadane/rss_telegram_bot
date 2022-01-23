@@ -4,7 +4,7 @@ import sqlite3
 conn = sqlite3.connect('db.db')
 cursor = conn.cursor()
 
-sources_names = ['rss', 'vk']
+sources_names = ['rss', 'vk', 'tg']
 
 
 def create_table_tracked_feeds():
@@ -12,6 +12,7 @@ def create_table_tracked_feeds():
     try:
         cursor.execute('create table if not exists rss_sources(id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, feed_name text NOT NULL, feed_url text NOT NULL, record_id text NOT NULL, record_title text NOT_NULL, record_link text NOT NULL)')
         cursor.execute('create table if not exists vk_sources(id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, feed_name text NOT NULL, feed_url text NOT NULL, record_id text NOT NULL, record_title text NOT_NULL, record_link text NOT NULL )')
+        cursor.execute('create table if not exists tg_sources(id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, feed_name text NOT NULL, feed_url text NOT NULL, record_id text NOT NULL, record_title text NOT_NULL, record_link text NOT NULL )')
         conn.commit()
     except sqlite3.Error as error:
         print("Ошибка", error)

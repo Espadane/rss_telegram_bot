@@ -3,6 +3,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
 import config
 from rss import *
+from telegram import get_records_from_telegram
 from vk import *
 from db_worker import *
 
@@ -29,6 +30,7 @@ async def help_command(msg: types.Message):
 
 @dp.message_handler(commands=['all_rss'])
 @dp.message_handler(commands=['all_vk'])
+@dp.message_handler(commands=['all_tg'])
 async def all_command(msg: types.Message):
     """Обработчик команды '/all'для вывода всех отслеживаемых лент с кнопками 'удалить' и 'последние записи'"""
     user_id = msg.from_user.id
@@ -65,7 +67,6 @@ async def last_feed(call: types.callback_query):
     feed_url = str(call.message.text).split('\n')[1]
     user_id = str(call.message.chat.id)
     records = get_records_from_db(user_id, feed_url)
-    print(records)
     for record in records:
         record_title = record[1]
         record_link = record[2]
@@ -107,6 +108,9 @@ def get_records_list(request_url):
     if 'vk' in request_url:
         records_list = get_posts_from_vk(request_url)
         source_name = 'vk'
+    elif 't.me' in request_url:
+        records_list = get_records_from_telegram(request_url)
+        source_name = 'tg'
     else:
         source_name = 'rss'
         records_list = get_records_from_rss(request_url)
