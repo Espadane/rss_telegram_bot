@@ -10,9 +10,12 @@ def get_records_from_telegram(request_url):
     posts = soup.find_all('div', class_='tgme_widget_message_wrap')
     feed_name = soup.title.text
     for post in posts[len(posts)-5:len(posts)]:
-        post_title_chunks = post.find(
-            'div', class_='js-message_text').text.split(' ')
-        post_title = ' '.join(post_title_chunks[0:7]) + ' ...'
+        try:
+            post_title_chunks = post.find(
+                'div', class_='js-message_text').text.split(' ')
+            post_title = ' '.join(post_title_chunks[0:7]) + ' ...'
+        except:
+            post_title = 'Запись ...'
         post_id = post.find(
             'div', class_='tgme_widget_message').get('data-post')
         post_link = f'https://t.me/{post_id}'
