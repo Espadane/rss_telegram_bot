@@ -9,21 +9,24 @@ def get_records_from_telegram(request_url):
     soup = BeautifulSoup(r.text, 'lxml')
     posts = soup.find_all('div', class_='tgme_widget_message_wrap')
     feed_name = soup.title.text
-    for post in posts[len(posts)-5:len(posts)]:
-        try:
-            post_title_chunks = post.find(
-                'div', class_='js-message_text').text.split(' ')
-            post_title = ' '.join(post_title_chunks[0:7]) + ' ...'
-        except:
-            post_title = 'Запись ...'
-        post_id = post.find(
-            'div', class_='tgme_widget_message').get('data-post')
-        post_link = f'https://t.me/{post_id}'
-        tg_posts.insert(0, {
-            'feed_name': feed_name,
-            'feed_url': preview_url,
-            'record_id': post_id,
-            'record_title': post_title,
-            'record_link': post_link
-        })
-    return tg_posts
+    if posts == []:
+        tg_posts = []
+    else:
+        for post in posts[len(posts)-5:len(posts)]:
+            try:
+                post_title_chunks = post.find(
+                    'div', class_='js-message_text').text.split(' ')
+                post_title = ' '.join(post_title_chunks[0:7]) + ' ...'
+            except:
+                post_title = 'Запись ...'
+            post_id = post.find(
+                'div', class_='tgme_widget_message').get('data-post')
+            post_link = f'https://t.me/{post_id}'
+            tg_posts.insert(0, {
+                'feed_name': feed_name,
+                'feed_url': preview_url,
+                'record_id': post_id,
+                'record_title': post_title,
+                'record_link': post_link
+            })
+        return tg_posts

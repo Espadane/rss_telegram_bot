@@ -1,4 +1,5 @@
 import asyncio
+from email import message
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
 import config
@@ -98,7 +99,7 @@ async def add_feed(msg: types.Message):
                 for record in records_list:
                     write_record_to_db(user_id, record, feed)
             except:
-                await msg.answer('Ссылка на источник не корректна')
+                await msg.answer('К сожалению данный источник отслеживать мы не имеем возможности.')
     else:
         await msg.answer(f'Данный источник уже отслеживается')
 
