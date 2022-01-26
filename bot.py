@@ -1,5 +1,4 @@
 import asyncio
-from email import message
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
 import config
